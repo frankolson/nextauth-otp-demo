@@ -1,0 +1,55 @@
+# setup article: https://jameschambers.co.uk/nextjs-hot-reload-docker-development
+version: "3"
+
+services:
+  otp-demo-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: otp-demo-web
+    restart: always
+    volumes:
+      - ./:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - otp-demo-db
+      - otp-demo-mailcatcher
+    environment:
+      NEXT_PUBLIC_URL: http://localhost:3000
+      NEXTAUTH_SECRET: secret
+      NEXTAUTH_URL: http://localhost:3000/api/auth
+      DATABASE_URL: postgresql://postgres:postgres@otp-demo-db:5432/development
+      DATABASE_DIRECT_URL: postgresql://postgres:postgres@otp-demo-db:5432/development
+      SMTP_HOST: otp-demo-mailcatcher
+      SMTP_PORT: 1025
+      SMTP_USER: ''
+      SMTP_PASSWORD: ''
+      SMTP_FROM: noreply@otp-demo.com
+    command: >
+      sh -c "npx prisma migrate dev &&
+             npm run dev"
+
+  otp-demo-db:
+    image: postgres:15-alpine
+    container_name: otp-demo-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: development
+    volumes:
+      - otp-demo-db-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  otp-demo-mailcatcher:
+    image: dockage/mailcatcher:0.8.2
+    container_name: otp-demo-mailcatcher
+    restart: on-failure
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
+volumes:
+  otp-demo-db-data:
