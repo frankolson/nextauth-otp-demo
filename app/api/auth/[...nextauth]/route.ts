@@ -4,6 +4,7 @@ import { Adapter } from "next-auth/adapters";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import prisma from "@/app/_lib/prisma";
+import { randomInt } from "crypto";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma as PrismaClient) as Adapter,
@@ -18,11 +19,18 @@ export const authOptions: AuthOptions = {
         },
       },
       from: process.env.SMTP_FROM,
+      async generateVerificationToken() {
+        return gernerateOTP().toString()
+      },
     }),
   ],
   pages: {
     signIn: '/auth/signin'
   }
+};
+
+function gernerateOTP() {
+  return randomInt(100000, 999999);
 };
 
 const handler =  NextAuth(authOptions);
