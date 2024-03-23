@@ -19,6 +19,7 @@ export const authOptions: AuthOptions = {
         },
       },
       from: process.env.SMTP_FROM,
+      maxAge: 3 * 60, // 3 minutes
       async generateVerificationToken() {
         return gernerateOTP().toString()
       },
