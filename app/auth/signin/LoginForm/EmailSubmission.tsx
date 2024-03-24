@@ -2,20 +2,37 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation"
 
-export default function Form() {
+interface Props {
+  onSubmit: (email: string) => void
+}
+
+export default function EmailSubmission({ onSubmit }: Props) {
   const [email, setEmail] = useState('')
-  const [submitting, setSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter()
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleEmailSubmission(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setSubmitting(true)
+    setIsSubmitting(true)
 
-    signIn('email', { email, callbackUrl: "/" })
+    const response = await signIn('email', { email, redirect: false })
+    if (response?.error) {
+      if (response?.url) {
+        router.push(response.url)
+      } else {
+        router.replace(`/auth/login?error=${encodeURIComponent(response.error)}`)
+      }
+    } else {
+      onSubmit(email)
+    }
+
+    setIsSubmitting(false)
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col w-full space-y-6">
+    <form onSubmit={handleEmailSubmission} className="flex flex-col w-full space-y-6">
       <div>
         <input
           id="email"
@@ -32,10 +49,10 @@ export default function Form() {
 
       <button
         type="submit"
-        disabled={submitting || !email}
+        disabled={isSubmitting || !email}
         className="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm disabled:opacity-50 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
-        {submitting ? 'Sending email...' : 'Login / Sign up'}
+        {isSubmitting ? 'Sending email...' : 'Login / Sign up'}
       </button>
     </form>
   )

@@ -5,7 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 async function authenticate() {
   const session = await getServerSession(authOptions);
-  if (!session) return redirect("/api/auth/signin");
+  if (!session) return redirect("/auth/signin");
 }
 
 export default async function Private() {
