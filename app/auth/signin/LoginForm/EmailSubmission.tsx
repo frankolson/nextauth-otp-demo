@@ -22,7 +22,7 @@ export default function EmailSubmission({ onSubmit }: Props) {
       if (response?.url) {
         router.push(response.url)
       } else {
-        router.replace(`/auth/login?error=${encodeURIComponent(response.error)}`)
+        router.replace(`/auth/signin?error=${encodeURIComponent(response.error)}`)
       }
     } else {
       onSubmit(email)
