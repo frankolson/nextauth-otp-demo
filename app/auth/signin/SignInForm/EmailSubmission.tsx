@@ -52,7 +52,7 @@ export default function EmailSubmission({ onSubmit }: Props) {
         disabled={isSubmitting || !email}
         className="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm disabled:opacity-50 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
-        {isSubmitting ? 'Sending email...' : 'Login / Sign up'}
+        {isSubmitting ? 'Sending email...' : 'Sign in / Sign up'}
       </button>
     </form>
   )

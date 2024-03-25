@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import LoginForm from "./LoginForm";
+import SignInForm from "./SignInForm";
 import VerificationAlert from "./VerificationAlert";
 
 async function authenticationPrecheck(): Promise<void> {
@@ -15,7 +15,7 @@ export default async function Signin() {
   return (
     <div className="border border-gray-200 bg-white rounded-md shadow-md p-4 max-w-md mx-auto">
       <VerificationAlert />
-      <LoginForm />
+      <SignInForm />
     </div>
   );
 }

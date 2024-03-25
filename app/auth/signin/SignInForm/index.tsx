@@ -4,7 +4,7 @@ import { useState } from "react";
 import EmailSubmission from "./EmailSubmission";
 import OTPVerification from "./OTPVerification";
 
-export default function LoginForm() {
+export default function SignInForm() {
   const [verificationEmail, setVerificationEmail] = useState<string>('')
 
   return verificationEmail
